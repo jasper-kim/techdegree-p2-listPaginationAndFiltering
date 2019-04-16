@@ -16,7 +16,8 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
-
+const studentList = document.querySelectorAll('li');
+const perPage = 10;
 
 
 
