@@ -2,42 +2,22 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-   
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
+/*
+  Add two global variables, one is an array to store LI elements containg student items.
+  The other variable stores a number that indicates how many student display on one page. 
+*/
 const studentList = document.querySelectorAll('li');
 const perPage = 10;
 
-
-
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
-const showPage = (list, page) => {
-   const startIndex = (page * perPage) - perPage;
-   const endIndex = page * perPage;
+/* 
+   Create the `showPage` function that has parameters, list and pageNumber.
+   This function creates two variables to dynamically determine start and end index in the given list argument.
+   This function loops thorough each items and update its display property depending, depending on the given condition.
+*/
+const showPage = (list, pageNumber) => {
+   const startIndex = (pageNumber * perPage) - perPage;
+   const endIndex = pageNumber * perPage;
 
    for (let i = 0; i < list.length; i++) {
       if(i >= startIndex && i < endIndex) {
@@ -49,12 +29,11 @@ const showPage = (list, page) => {
 
 }
 
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
+/*
+   Create the `appendPageLinks function` to code the pagination buttons.
+   This function builds a DOM Element for pagination functionality 
+   and add a 'click'event listener to each 'a' element to call the 'showPage' function.
+*/
 const appendPageLinks = list => {
    const mainDiv = document.querySelector('.page');
    const div = document.createElement('div');
@@ -91,5 +70,6 @@ const appendPageLinks = list => {
    }
 }
 
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
+//Call back functions to initialize the page.
+showPage(studentList, 1);
+appendPageLinks(studentList);
