@@ -21,16 +21,16 @@ const showPage = (list, pageNumber) => {
 
    for (let i = 0; i < list.length; i++) {
       if(i >= startIndex && i < endIndex) {
-         studentList[i].style.display = ''
+         studentList[i].style.display = '';
       } else {
-         studentList[i].style.display = 'none'
+         studentList[i].style.display = 'none';
       }
    }
 
 }
 
 /*
-   Create the `appendPageLinks function` to code the pagination buttons.
+   Create the 'appendPageLinks' function to created and append the pagination links.
    This function builds a DOM Element for pagination functionality 
    and add a 'click'event listener to each 'a' element to call the 'showPage' function.
 */
@@ -70,6 +70,26 @@ const appendPageLinks = list => {
    }
 }
 
+/*
+   Create the 'addSearch' function to created and append the search HTML.
+*/
+const addSearch = () => {
+   const headerDiv = document.querySelector('.page-header');
+   const div = document.createElement('div');
+   const input = document.createElement('input');
+   const button = document.createElement('button');
+   const names = document.querySelectorAll('h3');
+
+   div.className = 'student-search';
+   input.placeholder = "Search for students...";
+   button.textContent = 'Search';
+
+   div.appendChild(input);
+   div.appendChild(button);
+   headerDiv.appendChild(div);
+}
+
 //Call back functions to initialize the page.
 showPage(studentList, 1);
 appendPageLinks(studentList);
+addSearch();
