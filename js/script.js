@@ -21,12 +21,11 @@ const showPage = (list, pageNumber) => {
 
    for (let i = 0; i < list.length; i++) {
       if(i >= startIndex && i < endIndex) {
-         studentList[i].style.display = '';
+         list[i].style.display = 'block';
       } else {
-         studentList[i].style.display = 'none';
+         list[i].style.display = 'none';
       }
    }
-
 }
 
 /*
@@ -42,51 +41,101 @@ const appendPageLinks = list => {
    const ul = document.createElement('ul');
    const pages = Math.ceil(list.length / perPage);
 
-   for (let i = 1; i <= pages; i++) {
-      let li = document.createElement('li');
-      let a = document.createElement('a');
+   if(pages > 0) {
+      for (let i = 1; i <= pages; i++) {
+         let li = document.createElement('li');
+         let a = document.createElement('a');
+         
+         a.href = "#";
+         a.textContent = i;
+         li.appendChild(a);
+         ul.appendChild(li);
+      }
       
-      a.href = "#";
-      a.textContent = i;
-      li.appendChild(a);
-      ul.appendChild(li);
-   }
-   
-   const links = ul.querySelectorAll('a');
-   links[0].className = "active";
+      const links = ul.querySelectorAll('a');
+      links[0].className = "active";
 
+      for(let i= 0; i < links.length; i++) {
+         links[i].addEventListener('click', (e) => {
+            const link = e.target;
+            for(let j= 0; j < links.length; j++) {
+               links[j].className = "";
+            }
+            link.className = 'active';
+            showPage(list, link.textContent);
+         })
+      }
+   }
    div.appendChild(ul);
    mainDiv.appendChild(div);
-
-   for(let i= 0; i < links.length; i++) {
-      links[i].addEventListener('click', (e) => {
-         const link = e.target;
-         for(let j= 0; j < links.length; j++) {
-            links[j].className = "";
-         }
-         link.className = 'active';
-         showPage(studentList, link.textContent);
-      })
-   }
 }
 
 /*
    Create the 'addSearch' function to created and append the search HTML.
 */
 const addSearch = () => {
+   const mainDiv = document.querySelector('.page');
    const headerDiv = document.querySelector('.page-header');
-   const div = document.createElement('div');
+   const searchDiv = document.createElement('div');
    const input = document.createElement('input');
    const button = document.createElement('button');
    const names = document.querySelectorAll('h3');
 
-   div.className = 'student-search';
+   //Create the 'searchStudent' function to filer the student list using given input.
+   function searchStudent () {
+      const text = input.value.toLowerCase();
+
+      // loop over the student list and update css display property by using includes() method.
+      for(let i = 0; i < names.length; i++) {
+         if(names[i].textContent.includes(text)) {
+            studentList[i].style.display = 'block';
+         } else {
+            studentList[i].style.display = 'none';
+         }
+      }
+      
+      //Create a node list of matched student li element 
+      const searchList = ul.querySelectorAll('li[style="display: block;"]');
+
+      //Create conditional statemet, if the searchList has nothing, display 'NO RESULT' message on the screen.
+      //If not, call the showPage function with the arguments; searchList and 1.
+      if(searchList.length == 0) {
+         errorMessage.textContent = 'NO RESULT';
+      } else {
+         showPage(searchList, 1);
+         errorMessage.textContent = '';
+      }
+
+      //Create new pagination links with the argument; searchList.
+      const paginaionDiv = document.querySelector('.pagination');
+      mainDiv.removeChild(paginaionDiv);
+      appendPageLinks(searchList);
+   }
+
+    //Add attributes to search component.
+   searchDiv.className = 'student-search';
    input.placeholder = "Search for students...";
    button.textContent = 'Search';
 
-   div.appendChild(input);
-   div.appendChild(button);
-   headerDiv.appendChild(div);
+   //Add search component to HTML document.
+   searchDiv.appendChild(input);
+   searchDiv.appendChild(button);
+   headerDiv.appendChild(searchDiv);
+
+   //Add a 'p' element to display an error message when the search function returns nothing.
+   const errorMessage = document.createElement('p');
+   const ul = document.querySelector('.student-list');
+   mainDiv.insertBefore(errorMessage, ul);
+
+   //Add an event listener to the 'search' button.
+   button.addEventListener('click', (e) => {
+      searchStudent ();
+   });
+
+   //Add an event listener to the input element.
+   input.addEventListener('keyup', (e) => {
+      searchStudent ();
+   });
 }
 
 //Call back functions to initialize the page.
